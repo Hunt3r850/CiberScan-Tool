@@ -17,7 +17,7 @@
 - [Casos de Uso](#-casos-de-uso)
 - [Documentación](#-documentación)
 - [Contribuciones](#-contribuciones)
-- [Roadmap](#-roadmap)
+- [Roadmap](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/CiberScan-Tool.md#%EF%B8%8F-roadmap)
 - [Consideraciones Éticas y Legales](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/CiberScan-Tool.md#%EF%B8%8F-consideraciones-%C3%A9ticas-y-legales)
 - [Agradecimientos](#-agradecimientos)
 - [Licencia](#-licencia)
