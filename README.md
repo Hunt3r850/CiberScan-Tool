@@ -65,8 +65,8 @@ python3 src/cibersecurity_tool.py --target 192.168.1.0/24 --web-url http://ejemp
 
 Para más información, consulte:
 
-- [Manual de Usuario](Manual de Usuario-Herramienta de Ciberseguridad.md): Guía detallada para usuarios finales.
-- [Documentación Técnica](Documentación Técnica-Herramienta de Ciberseguridad.md): Información técnica para desarrolladores y administradores.
+- [Manual de Usuario](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/Manual%20de%20Usuario%20-%20Herramienta%20de%20Ciberseguridad.md): Guía detallada para usuarios finales.
+- [Documentación Técnica](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/Documentaci%C3%B3n%20T%C3%A9cnica%20-%20Herramienta%20de%20Ciberseguridad.md): Información técnica para desarrolladores y administradores.
 
 ## Consideraciones Éticas y Legales
 
