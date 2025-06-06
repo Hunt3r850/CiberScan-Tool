@@ -24,8 +24,8 @@ Este repositorio contiene una herramienta de ciberseguridad automatizada que int
 
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/Hunt3r850/ciberseguridad_proyecto.git
-   cd ciberseguridad_proyecto
+   git clone https://github.com/Hunt3r850/CiberScan-Tool.git
+   cd CiberScan-Tool
    ```
 
 2. Ejecutar el script de instalación:
