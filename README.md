@@ -65,8 +65,8 @@ python3 src/cibersecurity_tool.py --target 192.168.1.0/24 --web-url http://ejemp
 
 Para más información, consulte:
 
-- [Manual de Usuario](docs/manual_usuario.md): Guía detallada para usuarios finales.
-- [Documentación Técnica](docs/documentacion_tecnica.md): Información técnica para desarrolladores y administradores.
+- [Manual de Usuario](manual_de_usuario.md): Guía detallada para usuarios finales.
+- [Documentación Técnica](docs/documentación_técnica.md): Información técnica para desarrolladores y administradores.
 
 ## Consideraciones Éticas y Legales
 
