@@ -134,8 +134,8 @@ python3 src/cibersecurity_tool.py --target 192.168.0.0/16 --scan-type normal --p
 
 Para más información, consulte:
 
-- [Manual de Usuario](docs/manual_usuario.md): Guía detallada para usuarios finales.
-- [Documentación Técnica](docs/documentacion_tecnica.md): Información técnica para desarrolladores y administradores.
+- [Manual de Usuario]([docs/manual_usuario.md](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/Manual%20de%20Usuario%20-%20Herramienta%20de%20Ciberseguridad.md)): Guía detallada para usuarios finales.
+- [Documentación Técnica]([docs/documentacion_tecnica.md](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/Documentaci%C3%B3n%20T%C3%A9cnica%20-%20Herramienta%20de%20Ciberseguridad.md)): Información técnica para desarrolladores y administradores.
 
 ## 👥 Contribuciones
 
