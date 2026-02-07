@@ -1,77 +1,58 @@
-# Ciberseguridad Automatizada
+# CiberScan-Tool v2.0 (Actualización 2026)
 
-Este repositorio contiene una herramienta de ciberseguridad automatizada que integra múltiples módulos para realizar análisis completos de seguridad en sistemas y aplicaciones web.
+## Herramienta de Ciberseguridad Automatizada
 
-## Características Principales
+CiberScan-Tool es una plataforma integral diseñada para automatizar el análisis de seguridad, desde el descubrimiento de redes hasta la detección de vulnerabilidades críticas de última generación.
 
-- **Escaneo de Redes**: Descubrimiento de hosts, puertos abiertos, servicios en ejecución y sistemas operativos.
-- **Análisis de Vulnerabilidades**: Detección de vulnerabilidades conocidas en servicios y sistemas.
-- **Escaneo Web de Directorios**: Descubrimiento de recursos ocultos en aplicaciones web.
-- **Análisis de Vulnerabilidades Web**: Detección de problemas de seguridad como XSS, SQL Injection, Open Redirect y más.
-- **Generación Automática de Informes**: Creación de informes detallados en múltiples formatos (texto, HTML, JSON).
-- **Visualización de Resultados**: Representación gráfica de la topología de red y estadísticas de vulnerabilidades.
+### 🚀 Novedades de la Versión 2.0 (Febrero 2026)
 
-## Instalación
+- **Base de Datos CVE Actualizada**: Integración de vulnerabilidades críticas de 2025 y principios de 2026, incluyendo:
+  - **CVE-2025-34026**: Fallo de autenticación en Versa Concerto.
+  - **CVE-2025-24813**: RCE en Apache Tomcat.
+  - **CVE-2025-40551**: Deserialización en SolarWinds Web Help Desk.
+  - **CVE-2025-61882**: RCE en Oracle E-Business Suite.
+  - **CVE-2025-55182**: React2Shell RCE (Vulnerabilidad crítica en SSR).
+- **Estructura Modular Refactorizada**: Código organizado en paquetes de Python para facilitar la escalabilidad y el mantenimiento.
+- **Corrección de Importaciones**: Eliminación de errores de `ModuleNotFoundError` mediante una gestión robusta del `PYTHONPATH`.
+- **Instalación Optimizada**: Scripts de configuración mejorados para entornos virtuales.
 
-### Requisitos
+## 🛠️ Estructura del Proyecto
 
-- Python 3.8 o superior
-- Pip (gestor de paquetes de Python)
-- Nmap 7.80 o superior
-- Opcional: Nikto, OWASP ZAP
-
-### Pasos de Instalación
-
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/Hunt3r850/CiberScan-Tool.git
-   cd CiberScan-Tool
-   ```
-
-2. Ejecutar el script de instalación:
-   ```bash
-   python3 setup.py
-   ```
-
-3. Verificar la instalación:
-   ```bash
-   python3 src/cibersecurity_tool.py --help
-   ```
-
-## Uso Básico
-
-### Escaneo Completo
-
-```bash
-python3 src/cibersecurity_tool.py --target 192.168.1.0/24 --web-url http://ejemplo.com --scan-type normal --output ./resultados
+```
+CiberScan-Tool/
+├── src/
+│   ├── modules/
+│   │   ├── network_scanner/      # Escaneo de hosts y puertos
+│   │   ├── vulnerability_scanner/# Análisis de CVEs
+│   │   ├── web_directory_scanner/# Fuzzing de directorios
+│   │   └── web_vulnerability_scanner/ # Análisis de vulnerabilidades web
+│   └── cibersecurity_tool.py     # Punto de entrada principal
+├── docs/                         # Manuales y documentación técnica
+├── tests/                        # Pruebas unitarias y de validación
+├── run.sh                        # Script de ejecución rápida
+└── setup.py                      # Instalador automatizado
 ```
 
-### Opciones Disponibles
+## ⚙️ Instalación y Uso
 
-- `--target`: Objetivo a escanear (IP, rango de IPs o dominio)
-- `--web-url`: URL del sitio web (si es diferente del target)
-- `--scan-type`: Tipo de escaneo de red ('fast', 'normal', 'deep')
-- `--ports`: Puertos a escanear (ej. "22,80,443" o "1-1000")
-- `--wordlist`: Nombre o ruta del diccionario para escaneo de directorios
-- `--extensions`: Lista de extensiones para escaneo de directorios, separadas por comas
-- `--threads`: Número de hilos para escaneo paralelo
-- `--crawl-depth`: Profundidad de rastreo para análisis de vulnerabilidades web
-- `--max-urls`: Número máximo de URLs a analizar
-- `--scan-types`: Tipos de escaneo de vulnerabilidades web, separados por comas
-- `--output`: Directorio de salida
-- `--log-level`: Nivel de logging ('DEBUG', 'INFO', 'WARNING', 'ERROR')
+### Requisitos Previos
+- Python 3.8+
+- Nmap instalado en el sistema
 
-## Documentación
+### Instalación Rápida
+```bash
+git clone https://github.com/Hunt3r850/CiberScan-Tool.git
+cd CiberScan-Tool
+python3 setup.py
+```
 
-Para más información, consulte:
+### Ejecución
+```bash
+./run.sh --target 192.168.1.0/24 --scan-type fast --output ./resultados
+```
 
-- [Manual de Usuario](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/Manual%20de%20Usuario%20-%20Herramienta%20de%20Ciberseguridad.md): Guía detallada para usuarios finales.
-- [Documentación Técnica](https://github.com/Hunt3r850/CiberScan-Tool/blob/main/Documentaci%C3%B3n%20T%C3%A9cnica%20-%20Herramienta%20de%20Ciberseguridad.md): Información técnica para desarrolladores y administradores.
+## 🌐 Documentación y Soporte
+Visita nuestro portal de documentación: [https://ayjsnvym.manus.space](https://ayjsnvym.manus.space)
 
-## Consideraciones Éticas y Legales
-
-Esta herramienta está diseñada para fines educativos y de seguridad legítima. Utilícela de manera ética y legal, respetando las políticas de seguridad y privacidad aplicables.
-
-## Licencia
-
-Este proyecto se distribuye bajo la licencia MIT.
+---
+© 2026 CiberScan-Tool Project. Uso ético y profesional solamente.

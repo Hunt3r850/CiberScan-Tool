@@ -12,9 +12,9 @@ import os
 import datetime
 import logging
 import tempfile
-from .host import Host
-from .port import Port
-from .service import Service
+from src.modules.network_scanner.host import Host
+from src.modules.network_scanner.port import Port
+from src.modules.network_scanner.service import Service
 
 class NetworkScanner:
     def __init__(self, log_level=logging.INFO):

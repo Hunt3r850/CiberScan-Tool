@@ -20,10 +20,15 @@ from pathlib import Path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Importar módulos del proyecto
-from modules.network_scanner import NetworkScanner, NetworkVisualizer
-from modules.vulnerability_scanner import VulnerabilityScanner, VulnerabilityReporter
-from modules.web_directory_scanner import DirectoryScanner, WordlistManager, DirectoryReporter
-from modules.web_vulnerability_scanner import WebVulnerabilityScanner, WebVulnerabilityReporter
+from src.modules.network_scanner.scanner import NetworkScanner
+from src.modules.network_scanner.visualizer import NetworkVisualizer
+from src.modules.vulnerability_scanner.scanner import VulnerabilityScanner
+from src.modules.vulnerability_scanner.reporter import VulnerabilityReporter
+from src.modules.web_directory_scanner.scanner import DirectoryScanner
+from src.modules.web_directory_scanner.wordlist import WordlistManager
+from src.modules.web_directory_scanner.reporter import DirectoryReporter
+from src.modules.web_vulnerability_scanner.scanner import WebVulnerabilityScanner
+from src.modules.web_vulnerability_scanner.reporter import WebVulnerabilityReporter
 
 class CibersecurityTool:
     def __init__(self, output_dir="./output", log_level=logging.INFO):
