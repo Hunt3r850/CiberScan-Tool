@@ -40,11 +40,8 @@ class CibersecurityTool:
             log_level (int): Nivel de logging
         """
         self.output_dir = output_dir
+        os.makedirs(output_dir, exist_ok=True)
         self.logger = self._setup_logger(log_level)
-        
-        # Crear directorio de salida si no existe
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
             
         # Inicializar componentes
         self.network_scanner = None
@@ -53,7 +50,7 @@ class CibersecurityTool:
         self.web_vulnerability_scanner = None
         
         # Resultados
-        self.network_results = {}
+        self.network_results = []
         self.vulnerability_results = {}
         self.directory_results = []
         self.web_vulnerability_results = {}
@@ -133,22 +130,21 @@ class CibersecurityTool:
         self.logger.info(f"Iniciando escaneo de red en {target}")
         
         try:
-            # Configurar escaneo según el tipo
-            if scan_type == "fast":
-                self.network_scanner.set_scan_speed("fast")
-                if not ports:
-                    ports = "21,22,23,25,53,80,110,111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080"
+            default_ports = {
+                "fast": "21,22,23,25,53,80,110,111,135,139,143,443,445,993,995,3306,3389,8080",
+                "normal": "1-1000",
+                "deep": "1-65535",
+            }
+            scan_modes = {"fast": "fast", "normal": "normal", "deep": "comprehensive"}
+            if ports:
+                port_scan_type = "version" if scan_type == "deep" else "basic"
+                self.network_results = self.network_scanner.scan_ports(target, ports, port_scan_type)
             elif scan_type == "normal":
-                self.network_scanner.set_scan_speed("normal")
-                if not ports:
-                    ports = "1-1000"
-            elif scan_type == "deep":
-                self.network_scanner.set_scan_speed("slow")
-                if not ports:
-                    ports = "1-65535"
-                    
-            # Realizar escaneo
-            self.network_results = self.network_scanner.scan(target, ports)
+                self.network_results = self.network_scanner.scan_network(target, scan_modes[scan_type])
+            else:
+                self.network_results = self.network_scanner.scan_ports(
+                    target, default_ports[scan_type], "comprehensive" if scan_type == "deep" else "basic"
+                )
             
             # Guardar resultados
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -156,9 +152,8 @@ class CibersecurityTool:
             self.network_scanner.save_results(self.network_results, results_file)
             
             # Generar visualización
-            visualizer = NetworkVisualizer()
-            network_map = os.path.join(self.output_dir, f"network_map_{timestamp}.png")
-            visualizer.generate_network_map(self.network_results, network_map)
+            visualizer = NetworkVisualizer(output_dir=self.output_dir)
+            visualizer.create_network_map(self.network_results, f"network_map_{timestamp}.png")
             
             self.logger.info(f"Escaneo de red completado. Resultados guardados en {results_file}")
             return self.network_results
@@ -181,32 +176,15 @@ class CibersecurityTool:
         
         try:
             # Si no se proporcionan hosts, usar los del escaneo de red
-            if not hosts and self.network_results:
-                hosts = []
-                for host_ip, host_data in self.network_results.items():
-                    host_info = {
-                        'ip': host_ip,
-                        'ports': [port['port'] for port in host_data.get('ports', [])]
-                    }
-                    hosts.append(host_info)
+            if hosts is None:
+                hosts = self.network_results
                     
             if not hosts:
                 self.logger.warning("No se proporcionaron hosts para el análisis de vulnerabilidades")
                 return {}
                 
             # Realizar análisis de vulnerabilidades
-            self.vulnerability_results = {}
-            for host in hosts:
-                host_ip = host['ip']
-                self.logger.info(f"Analizando vulnerabilidades en {host_ip}")
-                
-                # Analizar vulnerabilidades para cada puerto
-                host_vulns = []
-                for port in host.get('ports', []):
-                    vulns = self.vulnerability_scanner.scan_host_port(host_ip, port)
-                    host_vulns.extend(vulns)
-                    
-                self.vulnerability_results[host_ip] = host_vulns
+            self.vulnerability_results = self.vulnerability_scanner.scan_network(hosts, methods=["cve_db"])
                 
             # Guardar resultados
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -400,11 +378,12 @@ class CibersecurityTool:
             if not web_url:
                 # Buscar servidores web en los resultados del escaneo de red
                 web_servers = []
-                for host_ip, host_data in network_results.items():
-                    for port in host_data.get('ports', []):
-                        if port.get('service') in ['http', 'https'] or port.get('port') in [80, 443, 8080, 8443]:
-                            protocol = 'https' if port.get('port') in [443, 8443] else 'http'
-                            web_servers.append(f"{protocol}://{host_ip}:{port.get('port')}")
+                for host in network_results:
+                    for port in host.ports:
+                        service_name = port.service.name if port.service else ""
+                        if service_name in ["http", "https"] or port.number in [80, 443, 8080, 8443]:
+                            protocol = "https" if port.number in [443, 8443] else "http"
+                            web_servers.append(f"{protocol}://{host.ip_address}:{port.number}")
                 
                 if web_servers:
                     web_url = web_servers[0]

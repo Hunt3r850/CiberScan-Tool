@@ -1,58 +1,88 @@
-# CiberScan-Tool v2.0 (Actualización 2026)
+# CiberScan-Tool v2.0
 
-## Herramienta de Ciberseguridad Automatizada
+CiberScan-Tool integra descubrimiento de red, correlacion de servicios con CVE,
+descubrimiento de rutas web y comprobaciones activas de seguridad web. Los
+resultados se pueden exportar a JSON y a informes legibles en HTML o texto.
 
-CiberScan-Tool es una plataforma integral diseñada para automatizar el análisis de seguridad, desde el descubrimiento de redes hasta la detección de vulnerabilidades críticas de última generación.
+> Utiliza esta herramienta unicamente sobre sistemas propios o para los que
+> tengas autorizacion explicita. Los escaneos generan trafico activo.
 
-### 🚀 Novedades de la Versión 2.0 (Febrero 2026)
+## Funciones
 
-- **Base de Datos CVE Actualizada**: Integración de vulnerabilidades críticas de 2025 y principios de 2026, incluyendo:
-  - **CVE-2025-34026**: Fallo de autenticación en Versa Concerto.
-  - **CVE-2025-24813**: RCE en Apache Tomcat.
-  - **CVE-2025-40551**: Deserialización en SolarWinds Web Help Desk.
-  - **CVE-2025-61882**: RCE en Oracle E-Business Suite.
-  - **CVE-2025-55182**: React2Shell RCE (Vulnerabilidad crítica en SSR).
-- **Estructura Modular Refactorizada**: Código organizado en paquetes de Python para facilitar la escalabilidad y el mantenimiento.
-- **Corrección de Importaciones**: Eliminación de errores de `ModuleNotFoundError` mediante una gestión robusta del `PYTHONPATH`.
-- **Instalación Optimizada**: Scripts de configuración mejorados para entornos virtuales.
+- Descubrimiento de hosts, puertos, servicios y sistemas operativos con Nmap.
+- Consulta de una base CVE local y, opcionalmente, de la API de Vulners.
+- Descubrimiento concurrente de rutas a partir de diccionarios.
+- Pruebas de XSS reflejado, inyeccion SQL basada en errores, redireccion abierta
+  e inyeccion de cabeceras.
+- Rastreo limitado al mismo host y con profundidad y cantidad configurables.
+- Informes TXT, HTML y JSON para los modulos de seguridad.
 
-## 🛠️ Estructura del Proyecto
+## Requisitos
 
-```
-CiberScan-Tool/
-├── src/
-│   ├── modules/
-│   │   ├── network_scanner/      # Escaneo de hosts y puertos
-│   │   ├── vulnerability_scanner/# Análisis de CVEs
-│   │   ├── web_directory_scanner/# Fuzzing de directorios
-│   │   └── web_vulnerability_scanner/ # Análisis de vulnerabilidades web
-│   └── cibersecurity_tool.py     # Punto de entrada principal
-├── docs/                         # Manuales y documentación técnica
-├── tests/                        # Pruebas unitarias y de validación
-├── run.sh                        # Script de ejecución rápida
-└── setup.py                      # Instalador automatizado
-```
+- Python 3.8 o posterior.
+- Nmap instalado y disponible en `PATH` para los escaneos de red.
 
-## ⚙️ Instalación y Uso
+En Amazon Linux/Fedora/RHEL puedes instalar Nmap con `sudo dnf install nmap`.
+En otros sistemas, consulta el gestor de paquetes de tu distribucion.
 
-### Requisitos Previos
-- Python 3.8+
-- Nmap instalado en el sistema
+## Instalacion
 
-### Instalación Rápida
 ```bash
 git clone https://github.com/Hunt3r850/CiberScan-Tool.git
 cd CiberScan-Tool
-python3 setup.py
+python3 -m venv venv
+venv/bin/python -m pip install --upgrade pip
+venv/bin/python -m pip install -r requirements.txt
 ```
 
-### Ejecución
+El instalador interactivo heredado sigue disponible con `python3 setup.py`,
+pero el procedimiento anterior es mas apropiado para automatizacion.
+
+## Uso
+
 ```bash
-./run.sh --target 192.168.1.0/24 --scan-type fast --output ./resultados
+./run.sh --target 192.168.1.0/24 --scan-type fast --output ./output
 ```
 
-## 🌐 Documentación y Soporte
-Visita nuestro portal de documentación: [https://ayjsnvym.manus.space](https://ayjsnvym.manus.space)
+Opciones utiles:
 
----
-© 2026 CiberScan-Tool Project. Uso ético y profesional solamente.
+```text
+--ports 22,80,443
+--web-url https://aplicacion.example
+--wordlist /ruta/diccionario.txt
+--extensions php,html,bak
+--crawl-depth 2
+--max-urls 25
+--scan-types xss,sqli,open_redirect,header_injection
+```
+
+El script `run.sh` se puede invocar desde cualquier directorio y utiliza
+automaticamente `venv/` cuando existe.
+
+## Estructura
+
+```text
+src/
+├── cibersecurity_tool.py
+└── modules/
+    ├── network_scanner/
+    ├── vulnerability_scanner/
+    ├── web_directory_scanner/
+    └── web_vulnerability_scanner/
+data/
+docs/
+tests/
+```
+
+## Validacion
+
+Las pruebas no realizan escaneos reales; sustituyen las llamadas de red por
+respuestas controladas.
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_validation*.py'
+```
+
+## Documentacion
+
+La documentacion tecnica y los manuales historicos estan en [`docs/`](docs/).
