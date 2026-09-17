@@ -234,10 +234,12 @@ def create_run_script(venv_dir="venv"):
     # Script para Unix/Linux/Mac
     run_sh = "run.sh"
     with open(run_sh, 'w') as f:
-        f.write(f'''#!/bin/bash
-# Script para ejecutar la herramienta desde el entorno virtual
-source {venv_dir}/bin/activate
-python3 src/cibersecurity_tool.py "$@"
+        f.write(f'''#!/usr/bin/env bash
+set -euo pipefail
+project_dir="$(cd "$(dirname "${{BASH_SOURCE[0]}}")" && pwd)"
+python_bin="$project_dir/{venv_dir}/bin/python"
+export PYTHONPATH="$project_dir${{PYTHONPATH:+:$PYTHONPATH}}"
+exec "$python_bin" "$project_dir/src/cibersecurity_tool.py" "$@"
 ''')
     os.chmod(run_sh, 0o755)
     

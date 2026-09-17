@@ -59,18 +59,17 @@ class TestNetworkScanner(unittest.TestCase):
         # Configurar el mock de nmap
         mock_scanner = MagicMock()
         mock_scanner.all_hosts.return_value = ['192.168.1.1']
-        mock_scanner.__getitem__.side_effect = lambda x: {
-            '192.168.1.1': MagicMock(
-                state=lambda: 'up',
-                hostname=lambda: 'router',
-                __getitem__=lambda y: {
-                    'tcp': {
-                        80: {'state': 'open', 'name': 'http', 'product': 'nginx', 'version': '1.18.0'},
-                        22: {'state': 'open', 'name': 'ssh', 'product': 'OpenSSH', 'version': '8.2'}
-                    }
-                }[y] if y in ['tcp'] else {}
-            )
-        }[x]
+        mock_host = MagicMock()
+        mock_host.state.return_value = 'up'
+        mock_host.hostname.return_value = 'router'
+        mock_host.__contains__.side_effect = lambda key: key in {'tcp'}
+        mock_host.__getitem__.side_effect = lambda key: {
+            'tcp': {
+                80: {'state': 'open', 'name': 'http', 'product': 'nginx', 'version': '1.18.0'},
+                22: {'state': 'open', 'name': 'ssh', 'product': 'OpenSSH', 'version': '8.2'}
+            }
+        }[key]
+        mock_scanner.__getitem__.return_value = mock_host
         mock_nmap.return_value = mock_scanner
         
         # Ejecutar la función

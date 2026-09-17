@@ -7,6 +7,7 @@ de las redes escaneadas, incluyendo mapas de red y gráficos de puertos.
 
 import networkx as nx
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
 import os
 import logging
 from matplotlib.colors import LinearSegmentedColormap
@@ -180,7 +181,7 @@ class NetworkVisualizer:
             bars = plt.bar(ports, counts)
             
             # Colorear barras según frecuencia
-            cm = plt.cm.get_cmap('YlOrRd')
+            cm = colormaps.get_cmap('YlOrRd')
             max_count = max(counts)
             for i, bar in enumerate(bars):
                 bar.set_color(cm(counts[i]/max_count))
@@ -328,7 +329,7 @@ class NetworkVisualizer:
             bars = plt.barh(os_names, counts)
             
             # Colorear barras
-            cm = plt.cm.get_cmap('viridis')
+            cm = colormaps.get_cmap('viridis')
             for i, bar in enumerate(bars):
                 bar.set_color(cm(i/len(bars)))
             

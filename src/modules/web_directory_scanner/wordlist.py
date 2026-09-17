@@ -100,9 +100,12 @@ class WordlistManager:
             list: Lista de palabras del diccionario o None si hay error
         """
         if wordlist_name not in self.available_wordlists:
-            # Comprobar si es una ruta absoluta
+            # Aceptar una ruta directa o un archivo creado despues de inicializar el gestor.
+            local_path = os.path.join(self.wordlists_dir, wordlist_name)
             if os.path.isfile(wordlist_name):
                 filepath = wordlist_name
+            elif os.path.isfile(local_path):
+                filepath = local_path
             else:
                 self.logger.error(f"Diccionario no encontrado: {wordlist_name}")
                 return None

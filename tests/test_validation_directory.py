@@ -11,6 +11,7 @@ import sys
 import unittest
 import tempfile
 import json
+import requests
 from unittest.mock import patch, MagicMock
 
 # Añadir el directorio raíz al path para importar los módulos
@@ -150,15 +151,16 @@ class TestWordlistManager(unittest.TestCase):
         
         # Filtrar por longitud mínima
         filtered = self.wordlist_manager.filter_wordlist(words, min_length=5)
-        self.assertEqual(len(filtered), 3)
+        self.assertEqual(len(filtered), 4)
         self.assertIn('login', filtered)
         self.assertIn('admin', filtered)
         self.assertIn('backup', filtered)
+        self.assertIn('config', filtered)
         self.assertNotIn('test', filtered)
         
         # Filtrar por longitud máxima
         filtered = self.wordlist_manager.filter_wordlist(words, max_length=4)
-        self.assertEqual(len(filtered), 2)
+        self.assertEqual(len(filtered), 1)
         self.assertIn('test', filtered)
         
         # Filtrar por patrón
@@ -270,7 +272,7 @@ class TestDirectoryScanner(unittest.TestCase):
     def test_scan_with_wordlist(self, mock_get):
         """Prueba el escaneo con un diccionario."""
         # Configurar el mock
-        def mock_response(url):
+        def mock_response(url, **kwargs):
             response = MagicMock()
             if 'admin' in url:
                 response.status_code = 200

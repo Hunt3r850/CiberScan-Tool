@@ -12,9 +12,9 @@ import os
 import datetime
 import logging
 import tempfile
-from src.modules.network_scanner.host import Host
-from src.modules.network_scanner.port import Port
-from src.modules.network_scanner.service import Service
+from .host import Host
+from .port import Port
+from .service import Service
 
 class NetworkScanner:
     def __init__(self, log_level=logging.INFO):
@@ -24,8 +24,17 @@ class NetworkScanner:
         Args:
             log_level (int, opcional): Nivel de logging
         """
-        self.nm = nmap.PortScanner()
         self.logger = self._setup_logger(log_level)
+        try:
+            self.nm = nmap.PortScanner()
+        except nmap.PortScannerError:
+            self.nm = None
+
+    def _get_nmap(self):
+        """Inicializa Nmap al usarlo para que otros modulos funcionen sin el binario."""
+        if self.nm is None:
+            self.nm = nmap.PortScanner()
+        return self.nm
         
     def _setup_logger(self, log_level):
         """
@@ -71,12 +80,14 @@ class NetworkScanner:
             args = "-sn"  # Default to ping scan
             
         try:
+            self._get_nmap()
             self.nm.scan(hosts=target, arguments=args)
             hosts = []
             
             for host_ip in self.nm.all_hosts():
-                host_status = self.nm[host_ip].state()
-                hostname = self.nm[host_ip].hostname() if 'hostname' in self.nm[host_ip] else None
+                host_data = self.nm[host_ip]
+                host_status = host_data.state()
+                hostname = host_data.hostname() or None
                 
                 host = Host(host_ip, hostname, host_status)
                 host.last_scan_time = datetime.datetime.now()
@@ -113,18 +124,24 @@ class NetworkScanner:
             args = f"-sV -p {ports}"
             
         try:
+            self._get_nmap()
             self.nm.scan(hosts=target, arguments=args)
             hosts = []
             
             for host_ip in self.nm.all_hosts():
-                host_status = self.nm[host_ip].state()
-                hostname = self.nm[host_ip].hostname() if 'hostname' in self.nm[host_ip] else None
+                host_data = self.nm[host_ip]
+                host_status = host_data.state()
+                hostname = host_data.hostname() or None
                 
                 host = Host(host_ip, hostname, host_status)
                 host.last_scan_time = datetime.datetime.now()
                 
-                if 'tcp' in self.nm[host_ip]:
-                    for port_num, port_info in self.nm[host_ip]['tcp'].items():
+                try:
+                    tcp_ports = host_data['tcp']
+                except (KeyError, TypeError):
+                    tcp_ports = {}
+                if tcp_ports:
+                    for port_num, port_info in tcp_ports.items():
                         port = Port(port_num, "tcp", port_info['state'])
                         
                         if 'name' in port_info:
@@ -144,8 +161,8 @@ class NetworkScanner:
                         host.add_port(port)
                 
                 # Añadir información del sistema operativo si está disponible
-                if 'osmatch' in self.nm[host_ip]:
-                    os_matches = self.nm[host_ip]['osmatch']
+                if 'osmatch' in host_data:
+                    os_matches = host_data['osmatch']
                     if os_matches:
                         host.set_os_info({
                             'name': os_matches[0].get('name', 'Unknown'),
@@ -240,6 +257,11 @@ class NetworkScanner:
         self.logger.info(f"Enriqueciendo resultados de Masscan para {len(hosts)} hosts")
         
         enriched_hosts = []
+        try:
+            self._get_nmap()
+        except nmap.PortScannerError as exc:
+            self.logger.error("Nmap no esta disponible: %s", exc)
+            return hosts
         for host in hosts:
             if not host.ports:
                 enriched_hosts.append(host)
